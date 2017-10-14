@@ -34,14 +34,10 @@ h3{
 	<h3>Code Compile</h3>
 <!-- getiing the id of the language -->
     <label>Language ID <a href="#" id="langhelp">(list)</a>:</label>
-    <input type='text' id="langid" value=7>
+    <input type='text' id="langid" value=0>
     <br>
-    <label>Problem ID</label>
-    <input type='text' id="probid" value=1>
-    <br>
-
     <label>Code:</label>
-    <textarea id="code" style="height:400px;width:600px;">print 'Hello!'</textarea>
+    <textarea id="code">print 'Hello!'</textarea>
     <br>
     <br>
 <!-- creating box for stdin -->
@@ -85,13 +81,11 @@ h3{
         var langid = $('#langid').val();
         var codeF = $('#code').val();
         var stdin = $('#stdin').val();
-        var probid = $('#probid').val();
 // passing the json file to the page 
         var json = {
             language: langid,
             code: codeF,
-            stdin:stdin,
-            problemId:probid
+            stdin:stdin
         };
         console.log(json);
 

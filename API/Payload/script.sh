@@ -16,7 +16,6 @@ file=$2
 output=$3
 addtionalArg=$4
 
-
 ########################################################################
 #	- The script works as follows
 #	- It first stores the stdout and std err to another stream
@@ -38,9 +37,15 @@ addtionalArg=$4
 #	
 ########################################################################
 
-exec  1> $"/usercode/logfile.txt"
+exec  1> $"/usercode/stdout.txt"
 exec  2> $"/usercode/errors"
 #3>&1 4>&2 >
+
+
+type=$(sed -n 1p /usercode/config)
+testStart=1
+testEnd=$(sed -n 2p /usercode/config)
+
 
 START=$(date +%s.%2N)
 #Branch 1
@@ -52,10 +57,24 @@ else
         $compiler /usercode/$file $addtionalArg #&> /usercode/errors.txt
 	#Branch 2a
 	if [ $? -eq 0 ];	then
-		$output -< $"/usercode/inputFile" #| tee /usercode/output.txt    
+		for ((i=testStart; i<=$testEnd; i++))
+		do 
+			echo "test$i.in"
+
+			$output -< $"/usercode/test$i.in" | tee "/usercode/output.txt"
+			
+			if diff -Z "/usercode/output.txt" "/usercode/test$i.out" > /dev/null
+			 then
+				echo "*-COMPILEBOX::DECISION-*,Accepted,test$i" >> "/usercode/logfile.txt"
+			 else
+				echo "*-COMPILEBOX::DECISION-*,Wrong Answer,test$i" >> "/usercode/logfile.txt"
+				break
+			fi
+
+		done    
 	#Branch 2b
 	else
-	    echo "Compilation Failed"
+	    echo "Compilation Failed" >> "usercode/logfile.txt"
 	    #if compilation fails, display the output file	
 	    #cat /usercode/errors.txt
 	fi
@@ -69,8 +88,10 @@ END=$(date +%s.%2N)
 runtime=$(echo "$END - $START" | bc)
 
 
+echo "*-COMPILEBOX::ENDOFOUTPUT-*" $runtime >> "/usercode/logfile.txt"
 echo "*-COMPILEBOX::ENDOFOUTPUT-*" $runtime 
 
 
 mv /usercode/logfile.txt /usercode/completed
+
 

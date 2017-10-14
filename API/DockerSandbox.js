@@ -20,7 +20,7 @@
          * @param {String} code: The actual code
          * @param {String} output_command: Used in case of compilers only, to execute the object code, send " " in case of interpretors
 */
-var DockerSandbox = function(timeout_value,path,folder,vm_name,compiler_name,file_name,code,output_command,languageName,e_arguments,stdin_data)
+var DockerSandbox = function(timeout_value,path,folder,vm_name,compiler_name,file_name,code,output_command,languageName,e_arguments,stdin_data,problem_path)
 {
 
     this.timeout_value=timeout_value;
@@ -34,6 +34,7 @@ var DockerSandbox = function(timeout_value,path,folder,vm_name,compiler_name,fil
     this.langName=languageName;
     this.extra_arguments=e_arguments;
     this.stdin_data=stdin_data;
+    this.problem_path=problem_path;
 }
 
 
@@ -70,7 +71,7 @@ DockerSandbox.prototype.prepare = function(success)
     var fs = require('fs');
     var sandbox = this;
 
-    exec("mkdir "+ this.path+this.folder + " && cp "+this.path+"/Payload/* "+this.path+this.folder+"&& chmod 777 "+ this.path+this.folder,function(st)
+    exec("mkdir "+ this.path+this.folder +" && cp "+this.path+this.problem_path+"/* "+this.path+this.folder + " && cp "+this.path+"/Payload/* "+this.path+this.folder+"&& chmod 777 "+ this.path+this.folder,function(st)
         {
             fs.writeFile(sandbox.path + sandbox.folder+"/" + sandbox.file_name, sandbox.code,function(err) 
             {
