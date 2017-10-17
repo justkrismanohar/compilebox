@@ -48,7 +48,7 @@ app.post('/compile',bruteforce.prevent,function(req, res)
  
     var folder= 'temp/' + random(10); //folder in which the temporary folder will be saved
     var path=__dirname+"/"; //current working path
-    var problem_path  ='Problems/Q'+probid+'/';
+    var problem_path  ='/usr/local/Problems/Q'+probid+'/';
   //var vm_name='virtual_machine'; //name of virtual machine that we want to execute
     var vm_name ='kmvm';
     var timeout_value=20;//Timeout Value, In Seconds
