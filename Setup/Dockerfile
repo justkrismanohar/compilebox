@@ -12,3 +12,8 @@ RUN apt-get install -y gcc
 RUN apt-get install -y g++
 RUN apt-get install -y python
 
+#Install java
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:openjdk-r/ppa
+RUN apt-get -y update
+RUN apt-get install -y openjdk-8-jdk
