@@ -1,0 +1,3 @@
+test1.in
+23test2.in
+23*-COMPILEBOX::ENDOFOUTPUT-* .10

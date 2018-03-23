@@ -20,7 +20,7 @@
          * @param {String} code: The actual code
          * @param {String} output_command: Used in case of compilers only, to execute the object code, send " " in case of interpretors
 */
-var DockerSandbox = function(timeout_value,path,folder,vm_name,compiler_name,file_name,code,output_command,languageName,e_arguments,stdin_data,problem_path)
+var DockerSandbox = function(timeout_value,path,folder,vm_name,compiler_name,file_name,code,output_command,languageName,e_arguments,stdin_data,problem_path,scriptTester)
 {
 
     this.timeout_value=timeout_value;
@@ -35,6 +35,7 @@ var DockerSandbox = function(timeout_value,path,folder,vm_name,compiler_name,fil
     this.extra_arguments=e_arguments;
     this.stdin_data=stdin_data;
     this.problem_path=problem_path;
+	this.scriptTester = scriptTester;
 }
 
 
@@ -71,9 +72,10 @@ DockerSandbox.prototype.prepare = function(success)
     var fs = require('fs');
     var sandbox = this;
 
-    exec("mkdir "+ this.path+this.folder +" && cp "+this.problem_path+"/* "+this.path+this.folder + " && cp "+this.path+"/Payload/* "+this.path+this.folder+"&& chmod 777 "+ this.path+this.folder,function(st)
+	//exec("mkdir "+ this.path+this.folder + " && cp -r "+this.path+"/Payload/webclass/* "+this.path+this.folder+"&& chmod 777 "+ this.path+this.folder,function(st)
+    exec("mkdir "+ this.path+this.folder + " && cp -r "+this.problem_path+"/* "+this.path+this.folder+"&& chmod 777 "+ this.path+this.folder,function(st)
         {
-            fs.writeFile(sandbox.path + sandbox.folder+"/" + sandbox.file_name, sandbox.code,function(err) 
+            fs.writeFile(sandbox.path + sandbox.folder+"/usercode/" + sandbox.file_name, sandbox.code,function(err) 
             {
                 if (err) 
                 {
@@ -82,22 +84,10 @@ DockerSandbox.prototype.prepare = function(success)
                 else
                 {
                     console.log(sandbox.langName+" file was saved!");
-                    exec("chmod 777 \'"+sandbox.path+sandbox.folder+"/"+sandbox.file_name+"\'")
-
-                    fs.writeFile(sandbox.path + sandbox.folder+"/inputFile", sandbox.stdin_data,function(err) 
-                    {
-                        if (err) 
-                        {
-                            console.log(err);
-                        }    
-                        else
-                        {
-                            console.log("Input file was saved!");
-                            success();
-                        } 
-                    });
-
-                    
+					//console.log("chmod 777 \'"+sandbox.path+sandbox.folder+"/usercode/"+sandbox.file_name+"\'");
+                    exec("sudo chmod 777 \'"+sandbox.path+sandbox.folder+"/usercode/"+sandbox.file_name+"\'");
+					success();
+                  
                 } 
             });
 
@@ -130,10 +120,11 @@ DockerSandbox.prototype.execute = function(success)
     var fs = require('fs');
     var myC = 0; //variable to enforce the timeout_value
     var sandbox = this;
-
+	
+	console.log("Running");
     //this statement is what is executed
    // var st = this.path+'DockerTimeout.sh ' + this.timeout_value + 's -u mysql -e \'NODE_PATH=/usr/local/lib/node_modules\' -i -t -v  "' + this.path + this.folder + '":/usercode ' + this.vm_name + ' /usercode/script.sh ' + this.compiler_name + ' ' + this.file_name + ' ' + this.output_command+ ' ' + this.extra_arguments;
-    var st = this.path+'DockerTimeout.sh ' + this.timeout_value + ' -i -t -v "' + this.path + this.folder + '":/usercode ' + this.vm_name + ' /usercode/script.sh ' + this.compiler_name + ' ' + this.file_name + ' ' + this.output_command+ ' ' + this.extra_arguments;
+    var st = this.path+'DockerTimeout.sh ' + this.timeout_value + ' -i -t -v "' + this.path + this.folder + '":/usercode ' + this.vm_name + ' bash -c " cd usercode && bash '+this.scriptTester+'"';
     //log the statement in console
     console.log(st);
 

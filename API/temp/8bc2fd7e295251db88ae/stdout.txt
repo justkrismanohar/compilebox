@@ -1,0 +1,2 @@
+test1.in
+*-COMPILEBOX::ENDOFOUTPUT-* 1.36

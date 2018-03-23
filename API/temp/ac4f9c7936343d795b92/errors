@@ -1,0 +1,28 @@
+/usercode/file.cpp:1:1: error: 'import' does not name a type
+ import java.util.*;
+ ^
+/usercode/file.cpp:3:10: error: expected ':' before 'static'
+   public static void main(String[] args) {
+          ^
+/usercode/file.cpp:3:27: error: 'String' has not been declared
+   public static void main(String[] args) {
+                           ^
+/usercode/file.cpp:3:36: error: expected ',' or '...' before 'args'
+   public static void main(String[] args) {
+                                    ^
+/usercode/file.cpp:10:1: error: expected ';' after class definition
+ }
+ ^
+/usercode/file.cpp: In static member function 'static void Main::main(int*)':
+/usercode/file.cpp:4:5: error: 'Scanner' was not declared in this scope
+     Scanner scanner = new Scanner(System.in);
+     ^
+/usercode/file.cpp:4:13: error: expected ';' before 'scanner'
+     Scanner scanner = new Scanner(System.in);
+             ^
+/usercode/file.cpp:6:9: error: 'scanner' was not declared in this scope
+     a = scanner.nextInt();
+         ^
+/usercode/file.cpp:8:5: error: 'System' was not declared in this scope
+     System.out.print(a+b);
+     ^
