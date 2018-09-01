@@ -6,12 +6,13 @@
 */
 
 
+
 var express = require('express');
 var arr = require('./compilers');
 var sandBox = require('./DockerSandbox');
 var webSandBox = require('./DockerWebSandbox');
 var app = express.createServer();
-var port=80;
+var port=8080;
 
 
 var ExpressBrute = require('express-brute');
@@ -102,10 +103,14 @@ app.post('/webclasscompile',bruteforce.prevent,function(req, res)
    
 });
 
+
+
 app.get('/', function(req, res) 
 {
     res.sendfile("./index.html");
+    //res.send("Hi");
 });
 
-console.log("Listening at "+port)
 app.listen(port);
+console.log((new Date).toLocaleString() + " Listening at "+port)
+
